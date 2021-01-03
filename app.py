@@ -10,7 +10,7 @@ lastValue = 0
 currentValue = 0
 progress = []
 
-for year in range(2010, 2020):
+for year in range(1993, 2021):
 
     html_content = requests.get('https://www.top500.org/lists/top500/{}/06/'.format(year)).text
 
@@ -50,17 +50,21 @@ for year in range(2010, 2020):
     dataGlobal[year] = [cores//3, inmultire * rmax//3, inmultire * rpeak//3]
 
 
-fig, ax = plt.subplots() 
-ax.set_ylabel('Rmax (TFlop/s)')
-ax.set_xlabel('Year')
 rmaxDataGlobal = []
 for year in dataGlobal:
     rmaxDataGlobal.append(dataGlobal[year][1])
 
-
-ax.plot(dataGlobal.keys(), rmaxDataGlobal)
-
-for yearIndex in range(2011, 2020):
+for yearIndex in range(1993, 2020):
     print('Progresul pentru ' + str((yearIndex - 1)) + ' - ' +  str(yearIndex) + ' este: ' + str(progress[yearIndex - 2011]))
+
+
+
+fig, ax = plt.subplots()
+
+ax.bar(dataGlobal.keys(), rmaxDataGlobal)
+
+
+ax.set_ylabel('Rmax (GFlop/s)')
+ax.set_title('PC Performance')
 
 plt.show()
