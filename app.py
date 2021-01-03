@@ -6,7 +6,11 @@ import threading
 
 dataGlobal = {}
 
-for year in range(1993, 2010):
+lastValue = 0
+currentValue = 0
+progress = []
+
+for year in range(2010, 2020):
 
     html_content = requests.get('https://www.top500.org/lists/top500/{}/06/'.format(year)).text
 
@@ -37,16 +41,26 @@ for year in range(1993, 2010):
         rmax += float(data[index][3][0].replace(',', ''))
         rpeak += float(data[index][4][0].replace(',', ''))
 
+    lastValue = currentValue
+    currentValue = inmultire * rmax//3
+
+    if currentValue * lastValue:
+        progress.append(currentValue - lastValue)
+
     dataGlobal[year] = [cores//3, inmultire * rmax//3, inmultire * rpeak//3]
 
 
 fig, ax = plt.subplots() 
-
+ax.set_ylabel('Rmax (TFlop/s)')
+ax.set_xlabel('Year')
 rmaxDataGlobal = []
 for year in dataGlobal:
     rmaxDataGlobal.append(dataGlobal[year][1])
 
-print(dataGlobal)
 
 ax.plot(dataGlobal.keys(), rmaxDataGlobal)
+
+for yearIndex in range(2011, 2020):
+    print('Progresul pentru ' + str((yearIndex - 1)) + ' - ' +  str(yearIndex) + ' este: ' + str(progress[yearIndex - 2011]))
+
 plt.show()
